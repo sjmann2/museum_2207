@@ -80,15 +80,21 @@ describe Museum do
                                                    })
     end
 
-    # it 'has a lottery for patrons who cannot afford an exhibit' do
-    #   expect(@dmns.ticket_lottery_contestants(@dead_sea_scrolls)).to eq([@patron_1, @patron_3])
+    it 'has a lottery for patrons who cannot afford an exhibit' do
+      @dmns.admit(@patron_1)
+      @dmns.admit(@patron_2)
+      @dmns.admit(@patron_3)
 
-    #   allowdmns.draw_lottery_winner(dead_sea_scrolls) #stubs test??????
+      expect(@dmns.ticket_lottery_contestants(@dead_sea_scrolls)).to eq([@patron_1, @patron_3])
 
-    #   expect(@dmns.draw_lottery_winner(@gems_and_minerals)).to eq(nil)
-    #   #If no contestants are elgible for the lottery, nil is returned.
+      allow(@dmns).to receive(@dmns.draw_lottery_winner(@dead_sea_scrolls)).and_return(:sample) 
 
-    #   expect(@dmns.announce_lottery_winner(imax)).to eq("#{name} has won the IMAX exhibit lottery")
-    # end
+      expect(@dmns.draw_lottery_winner(@imax)).to eq(nil)
+      #If no contestants are elgible for the lottery, nil is returned.
+
+      expect(@dmns.announce_lottery_winner(@dead_sea_scrolls)).to eq("#{name} has won the IMAX exhibit lottery")
+      #In the interaction pattern this said imax, but no one was interested in the imax, so I assumed it was a lottery for dead_sea_scrolls
+      expect(@dmns.announce_lottery_winner(@gems_and_minerals))
+    end
   end
 end
